@@ -9,7 +9,7 @@ const queryClient = new QueryClient();
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type Page = "home" | "warehouses" | "warehouse" | "my-cells" | "contacts" | "auth" | "profile";
+type Page = "home" | "warehouses" | "warehouse" | "my-cells" | "contacts" | "auth" | "profile" | "access";
 type CellStatus = "free" | "reserved" | "occupied" | "inactive";
 type BookingStatus = "pending" | "reserved" | "paid" | "cancelled" | "expired";
 
@@ -155,6 +155,7 @@ function Navbar({
   const navItems = [
     { id: "home" as Page, label: "Главная", icon: "Home" },
     { id: "warehouses" as Page, label: "Склады", icon: "Warehouse" },
+    { id: "access" as Page, label: "Доступ", icon: "KeyRound" },
     { id: "my-cells" as Page, label: "Мои ячейки", icon: "Package" },
     { id: "contacts" as Page, label: "Контакты", icon: "Phone" },
   ];
@@ -935,6 +936,199 @@ function AuthPage({
   );
 }
 
+// ─── Page: Access ──────────────────────────────────────────────────────────────
+
+function AccessPage({ setPage }: { setPage: (p: Page) => void }) {
+  const [state, setState] = useState<"idle" | "opening" | "opened">("idle");
+  const [pressed, setPressed] = useState(false);
+
+  const handleOpen = () => {
+    if (state !== "idle") return;
+    setPressed(true);
+    setState("opening");
+    setTimeout(() => setState("opened"), 1800);
+    setTimeout(() => {
+      setState("idle");
+      setPressed(false);
+    }, 6000);
+  };
+
+  return (
+    <div className="px-4 pt-8 pb-28 max-w-3xl mx-auto animate-fade-in">
+      {/* Header */}
+      <div className="mb-8">
+        <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">Access</p>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-none mb-3">
+          Доступ
+        </h1>
+        <p className="text-muted-foreground text-base max-w-md">
+          Здесь отображается ваш текущий статус доступа и кнопка открытия двери.
+        </p>
+      </div>
+
+      {/* Main access card */}
+      <div className="relative overflow-hidden bg-white rounded-3xl border border-border shadow-sm mb-5">
+        {/* Decorative gradient blob */}
+        <div className="absolute -right-20 -top-20 w-72 h-72 bg-gradient-to-br from-emerald-200/40 to-teal-200/40 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-16 -bottom-16 w-56 h-56 bg-gradient-to-tr from-primary/10 to-blue-200/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative p-7 md:p-10">
+          {/* Status header */}
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                  <Icon name="ShieldCheck" size={22} className="text-white" fallback="Shield" />
+                </div>
+                <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-white animate-pulse" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold leading-tight">Доступ активен</h2>
+                <p className="text-sm text-muted-foreground">Вы можете открыть дверь</p>
+              </div>
+            </div>
+            <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Online
+            </span>
+          </div>
+
+          {/* Cell info row */}
+          <div className="grid grid-cols-3 gap-2 mb-8">
+            {[
+              { label: "Склад", value: "Центральный", icon: "Warehouse" },
+              { label: "Ячейка", value: "№11 · 1 м³", icon: "Box" },
+              { label: "До", value: "11.07.2026", icon: "Calendar" },
+            ].map((f) => (
+              <div key={f.label} className="bg-secondary/40 rounded-2xl p-3 border border-border/50">
+                <div className="flex items-center gap-1 text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                  <Icon name={f.icon} size={10} fallback="Circle" />
+                  {f.label}
+                </div>
+                <p className="text-xs md:text-sm font-semibold truncate">{f.value}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* THE BIG BUTTON */}
+          <div className="flex flex-col items-center py-4">
+            <div className="relative">
+              {/* Pulse rings */}
+              {state === "idle" && (
+                <>
+                  <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" style={{ animationDuration: "2.5s" }} />
+                  <div className="absolute inset-0 rounded-full bg-primary/10 animate-ping" style={{ animationDuration: "2.5s", animationDelay: "0.7s" }} />
+                </>
+              )}
+
+              <button
+                onClick={handleOpen}
+                disabled={state !== "idle"}
+                className={`relative w-44 h-44 md:w-52 md:h-52 rounded-full flex flex-col items-center justify-center gap-2 transition-all duration-500 ${
+                  state === "opened"
+                    ? "bg-gradient-to-br from-emerald-500 to-teal-600 shadow-2xl shadow-emerald-500/40"
+                    : state === "opening"
+                    ? "bg-gradient-to-br from-amber-500 to-orange-600 shadow-2xl shadow-amber-500/40 scale-95"
+                    : "bg-gradient-to-br from-primary to-indigo-700 hover:scale-105 shadow-2xl shadow-primary/40 cursor-pointer"
+                } ${pressed && state === "opening" ? "scale-90" : ""}`}
+              >
+                {/* Inner ring */}
+                <div className="absolute inset-3 rounded-full border-2 border-white/20" />
+
+                {state === "idle" && (
+                  <>
+                    <Icon name="DoorClosed" size={48} className="text-white drop-shadow-lg" fallback="Lock" />
+                    <span className="text-white font-bold text-base tracking-wide">Открыть дверь</span>
+                  </>
+                )}
+                {state === "opening" && (
+                  <>
+                    <div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span className="text-white font-bold text-sm tracking-wide">Открываем...</span>
+                  </>
+                )}
+                {state === "opened" && (
+                  <>
+                    <Icon name="DoorOpen" size={48} className="text-white drop-shadow-lg animate-scale-in" fallback="Check" />
+                    <span className="text-white font-bold text-base tracking-wide animate-fade-in">Открыто!</span>
+                  </>
+                )}
+              </button>
+            </div>
+
+            <p className={`mt-6 text-sm text-center max-w-xs transition-colors ${
+              state === "opened" ? "text-emerald-700 font-semibold" : "text-muted-foreground"
+            }`}>
+              {state === "idle" && "Нажмите кнопку — дверь откроется в течение 2 секунд"}
+              {state === "opening" && "Отправляем сигнал на замок..."}
+              {state === "opened" && "✓ Дверь открыта. Не забудьте закрыть после использования"}
+            </p>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="border-t border-border" />
+
+        {/* Help block */}
+        <div className="relative p-6 md:p-7 bg-secondary/20">
+          <div className="flex items-start gap-3">
+            <div className="w-9 h-9 rounded-xl bg-white border border-border flex items-center justify-center shrink-0">
+              <Icon name="HelpCircle" size={16} className="text-primary" fallback="Info" />
+            </div>
+            <div>
+              <p className="font-bold text-sm mb-1">Нужна помощь?</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                <button onClick={() => setPage("profile")} className="text-primary font-semibold hover:underline">
+                  Продлить аренду
+                </button>{" "}
+                можно в личном кабинете. Если доступ не активировался или возникли вопросы,{" "}
+                <button onClick={() => setPage("contacts")} className="text-primary font-semibold hover:underline">
+                  свяжитесь с нами
+                </button>{" "}
+                через страницу контактов.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent activity */}
+      <div className="bg-white rounded-3xl border border-border p-6 md:p-7 shadow-sm">
+        <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+              <Icon name="History" size={18} className="text-blue-700" fallback="Clock" />
+            </div>
+            <h2 className="text-xl font-bold">История доступа</h2>
+          </div>
+          <span className="text-xs text-muted-foreground">Последние 3</span>
+        </div>
+
+        <div className="space-y-2">
+          {[
+            { date: "Сегодня, 14:32", action: "Открытие двери", status: "Успешно", icon: "DoorOpen", ok: true },
+            { date: "Вчера, 19:08", action: "Открытие двери", status: "Успешно", icon: "DoorOpen", ok: true },
+            { date: "10 мая, 11:24", action: "Активация доступа", status: "Подтверждено", icon: "ShieldCheck", ok: true },
+          ].map((row, i) => (
+            <div key={i} className="flex items-center gap-3 bg-secondary/40 border border-border/50 rounded-2xl px-4 py-3 hover:bg-secondary/70 transition-colors">
+              <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${row.ok ? "bg-emerald-100" : "bg-red-100"}`}>
+                <Icon name={row.icon} size={15} className={row.ok ? "text-emerald-700" : "text-red-700"} fallback="Circle" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold">{row.action}</p>
+                <p className="text-xs text-muted-foreground">{row.date}</p>
+              </div>
+              <span className="text-xs font-medium text-emerald-700 bg-emerald-50 border border-emerald-100 px-2.5 py-1 rounded-full">
+                {row.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Page: Profile ─────────────────────────────────────────────────────────────
 
 function CountdownTimer({ target }: { target: Date }) {
@@ -1281,6 +1475,7 @@ function AppContent() {
       {page === "my-cells" && (
         <MyCellsPage user={user} bookings={bookings} setPage={setPage} />
       )}
+      {page === "access" && <AccessPage setPage={setPage} />}
       {page === "contacts" && <ContactsPage />}
       {page === "auth" && <AuthPage setPage={setPage} onLogin={handleLogin} />}
       {page === "profile" && user && (
