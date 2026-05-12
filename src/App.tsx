@@ -1174,13 +1174,8 @@ function ProfilePage({
 
   const totalMonthly = rented.reduce((sum, b) => sum + b.price_month, 0);
   void totalMonthly;
-
-  const memo = [
-    "Храните вещи аккуратно и не перекрывайте доступ к ячейке.",
-    "Не передавайте доступ посторонним.",
-    "Для продления аренды заранее свяжитесь с нами до даты окончания срока.",
-    "Если возникли вопросы, используйте страницу контактов.",
-  ];
+  void rented;
+  void reserved;
 
   return (
     <div className="px-4 pt-8 pb-28 max-w-3xl mx-auto animate-fade-in">
@@ -1343,83 +1338,54 @@ function ProfilePage({
         </div>
       </section>
 
-      {/* 4. СТАТУС АРЕНДЫ */}
-      <section className="bg-white rounded-3xl border border-border p-6 md:p-7 mb-5 shadow-sm">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
-            <Icon name="PackageCheck" size={18} className="text-emerald-700" fallback="Package" />
-          </div>
-          <h2 className="text-xl font-bold">Статус аренды</h2>
-        </div>
-
-        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 rounded-2xl p-5 mb-4">
-          <div className="absolute -right-8 -top-8 w-32 h-32 bg-emerald-200/30 rounded-full blur-3xl" />
-          <div className="relative flex items-start justify-between">
-            <div>
-              <p className="text-[11px] uppercase tracking-wider text-emerald-800/70 mb-1">Срок аренды</p>
-              <p className="font-bold text-2xl text-emerald-950 leading-tight mb-3">Аренда действует</p>
-              <button className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-5 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 shadow-sm">
-                <Icon name="RefreshCw" size={14} />
-                Продлить
-              </button>
+      {/* 4. АРЕНДА ДЕЙСТВУЕТ */}
+      <section className="mb-6">
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-50 border border-emerald-100 rounded-3xl p-6 md:p-7 mb-3">
+          <div className="absolute -right-12 -top-12 w-40 h-40 bg-emerald-200/40 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -left-8 -bottom-8 w-32 h-32 bg-teal-200/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="relative flex items-start justify-between mb-5">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-emerald-500 flex items-center justify-center shadow-lg shadow-emerald-500/30">
+                <Icon name="PackageCheck" size={20} className="text-white" fallback="Package" />
+              </div>
+              <h2 className="text-2xl font-bold text-emerald-950 leading-tight">Аренда действует</h2>
             </div>
             <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-800 bg-white/80 backdrop-blur border border-emerald-200 px-3 py-1.5 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Активна
             </span>
           </div>
-        </div>
-
-        {/* Progress bar */}
-        <div className="bg-secondary/30 rounded-2xl p-4 border border-border/50 mb-4">
-          <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
-            <span>11 мая</span>
-            <span className="font-semibold text-foreground">осталось 60 дней</span>
-            <span>11 июля</span>
-          </div>
-          <div className="h-2 bg-secondary rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-emerald-400 to-teal-500 rounded-full" style={{ width: "15%" }} />
-          </div>
+          <button className="relative bg-primary hover:opacity-90 text-primary-foreground text-sm font-semibold px-6 py-3 rounded-2xl transition-all flex items-center gap-2 shadow-md shadow-primary/20">
+            <Icon name="RefreshCw" size={15} />
+            Продлить
+          </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {[
             { label: "Ячейка", value: "На планете · Ячейка №11 · 1 м³", icon: "Box" },
-            { label: "Оплата", value: "Оплачено", icon: "CheckCircle2", accent: true },
+            { label: "Оплата", value: "Оплачено", icon: "CheckCircle2", accent: "emerald" as const },
             { label: "Дата начала", value: "2026-05-11", icon: "Calendar" },
             { label: "Дата окончания", value: "2026-07-11", icon: "CalendarClock" },
-            { label: "Доступ", value: "Включен", icon: "Unlock", accent: true },
+            { label: "Доступ", value: "Включен", icon: "Unlock", accent: "emerald" as const },
           ].map((f) => (
-            <div key={f.label} className={`rounded-2xl p-4 border ${f.accent ? "bg-emerald-50 border-emerald-100" : "bg-secondary/50 border-border/50"}`}>
-              <div className={`flex items-center gap-1.5 text-[11px] uppercase tracking-wider mb-1.5 ${f.accent ? "text-emerald-800/70" : "text-muted-foreground"}`}>
+            <div
+              key={f.label}
+              className={`rounded-2xl p-4 border transition-all hover:shadow-sm ${
+                f.accent === "emerald"
+                  ? "bg-emerald-50 border-emerald-100"
+                  : "bg-white border-border"
+              }`}
+            >
+              <div className={`flex items-center gap-1.5 text-[11px] uppercase tracking-wider mb-1.5 ${
+                f.accent === "emerald" ? "text-emerald-800/70" : "text-muted-foreground"
+              }`}>
                 <Icon name={f.icon} size={11} fallback="Circle" />
                 {f.label}
               </div>
-              <p className={`text-sm font-semibold ${f.accent ? "text-emerald-900" : ""}`}>{f.value}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* 5. ПАМЯТКА */}
-      <section className="bg-white rounded-3xl border border-border p-6 md:p-7 mb-6 shadow-sm">
-        <div className="flex items-center gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-            <Icon name="BookOpen" size={18} className="text-blue-700" fallback="Book" />
-          </div>
-          <h2 className="text-xl font-bold">Памятка</h2>
-        </div>
-
-        <div className="space-y-2">
-          {memo.map((text, i) => (
-            <div
-              key={i}
-              className="flex items-start gap-3 bg-secondary/40 border border-border/50 rounded-2xl px-4 py-3.5 hover:bg-secondary/70 transition-colors"
-            >
-              <div className="w-6 h-6 shrink-0 rounded-lg bg-white border border-border flex items-center justify-center text-[11px] font-bold text-muted-foreground">
-                {i + 1}
-              </div>
-              <p className="text-sm text-foreground/80 leading-relaxed pt-0.5">{text}</p>
+              <p className={`text-sm font-semibold ${f.accent === "emerald" ? "text-emerald-900" : ""}`}>
+                {f.value}
+              </p>
             </div>
           ))}
         </div>
