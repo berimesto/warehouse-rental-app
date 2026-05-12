@@ -948,59 +948,192 @@ function ProfilePage({
   onLogout: () => void;
   setPage: (p: Page) => void;
 }) {
+  const rented = bookings.filter((b) => b.status === "paid");
+  const reserved = bookings.filter((b) => b.status === "reserved" || b.status === "pending");
+
+  const totalMonthly = rented.reduce((sum, b) => sum + b.price_month, 0);
+
   return (
-    <div className="px-4 pt-6 pb-24 max-w-2xl mx-auto animate-fade-in">
-      <h1 className="text-2xl font-bold mb-6">Профиль</h1>
-
-      <div className="bg-white rounded-2xl border border-border p-5 mb-4 flex items-center gap-4">
-        <div className="w-14 h-14 bg-accent rounded-2xl flex items-center justify-center text-2xl font-bold text-primary">
-          {user.full_name.charAt(0)}
-        </div>
-        <div>
-          <p className="font-semibold text-base">{user.full_name}</p>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
-          <p className="text-sm text-muted-foreground">{user.phone}</p>
-        </div>
+    <div className="px-4 pt-8 pb-28 max-w-3xl mx-auto animate-fade-in">
+      {/* Header */}
+      <div className="mb-10">
+        <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Личный кабинет</p>
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-none">
+          Здравствуйте,<br />
+          <span className="text-primary">{user.full_name.split(" ")[1] || user.full_name}</span>
+        </h1>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 mb-4">
-        <div className="bg-white rounded-2xl border border-border p-4 text-center">
-          <div className="text-2xl font-bold text-primary">{bookings.length}</div>
-          <div className="text-xs text-muted-foreground mt-0.5">Бронирований</div>
-        </div>
-        <div className="bg-white rounded-2xl border border-border p-4 text-center">
-          <div className="text-2xl font-bold text-primary">
-            {bookings.filter((b) => b.status === "paid").length}
+      {/* Profile card */}
+      <div className="bg-white rounded-3xl border border-border p-6 md:p-8 mb-6">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-2xl font-bold text-primary-foreground">
+              {user.full_name.charAt(0)}
+            </div>
+            <div>
+              <p className="font-semibold text-lg leading-tight">{user.full_name}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">Клиент с мая 2026</p>
+            </div>
           </div>
-          <div className="text-xs text-muted-foreground mt-0.5">Активных</div>
+          <button className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+            <Icon name="Pencil" size={13} />
+            Изменить
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border rounded-2xl overflow-hidden">
+          <div className="bg-secondary/40 px-5 py-4">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">Email</p>
+            <p className="text-sm font-medium truncate">{user.email}</p>
+          </div>
+          <div className="bg-secondary/40 px-5 py-4">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">Телефон</p>
+            <p className="text-sm font-medium">{user.phone}</p>
+          </div>
+          <div className="bg-secondary/40 px-5 py-4">
+            <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1">Документ</p>
+            <p className="text-sm font-medium flex items-center gap-1.5">
+              <Icon name="ShieldCheck" size={14} className="text-green-600" />
+              Подтверждён
+            </p>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-border overflow-hidden mb-4">
-        {[
-          { label: "Мои ячейки", icon: "Package", page: "my-cells" as Page },
-          { label: "Склады", icon: "Warehouse", page: "warehouses" as Page },
-          { label: "Контакты", icon: "Phone", page: "contacts" as Page },
-        ].map((item, i, arr) => (
-          <button
-            key={item.label}
-            onClick={() => setPage(item.page)}
-            className={`w-full flex items-center gap-3 px-5 py-4 hover:bg-secondary transition-colors text-left ${
-              i < arr.length - 1 ? "border-b border-border" : ""
-            }`}
-          >
-            <Icon name={item.icon} size={18} className="text-primary" fallback="Circle" />
-            <span className="text-sm font-medium">{item.label}</span>
-            <Icon name="ChevronRight" size={16} className="text-muted-foreground ml-auto" />
-          </button>
-        ))}
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-10">
+        <div className="bg-white rounded-2xl border border-border p-5">
+          <p className="text-3xl font-bold tracking-tight">{rented.length}</p>
+          <p className="text-xs text-muted-foreground mt-1">Арендовано</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-border p-5">
+          <p className="text-3xl font-bold tracking-tight">{reserved.length}</p>
+          <p className="text-xs text-muted-foreground mt-1">Забронировано</p>
+        </div>
+        <div className="bg-white rounded-2xl border border-border p-5">
+          <p className="text-3xl font-bold tracking-tight">
+            {totalMonthly.toLocaleString("ru")}
+            <span className="text-base text-muted-foreground font-normal"> ₽</span>
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">В месяц</p>
+        </div>
       </div>
 
+      {/* Rented cells */}
+      <section className="mb-10">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-xl font-bold">Арендованные ячейки</h2>
+          <span className="text-xs text-muted-foreground">{rented.length} активных</span>
+        </div>
+
+        {rented.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-dashed border-border p-8 text-center">
+            <Icon name="PackageOpen" size={22} className="text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Пока нет активных аренд</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {rented.map((b) => (
+              <div key={b.id} className="bg-white rounded-2xl border border-border p-5 hover:shadow-sm transition-shadow">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-lg">{b.cell.name}</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-green-700 bg-green-50 px-2 py-0.5 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
+                        Активна
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{b.warehouse.name} · {b.warehouse.address}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-base">{b.price_month.toLocaleString("ru")} ₽</p>
+                    <p className="text-xs text-muted-foreground">в месяц</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-xs text-muted-foreground border-t border-border pt-3">
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="Box" size={13} />
+                    {b.cell.size_m3} м³
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Icon name="Calendar" size={13} />
+                    до {b.end_date}
+                  </span>
+                  <button
+                    onClick={() => setPage("my-cells")}
+                    className="ml-auto text-primary font-medium hover:underline flex items-center gap-1"
+                  >
+                    Открыть <Icon name="ArrowRight" size={12} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Reserved cells */}
+      <section className="mb-10">
+        <div className="flex items-baseline justify-between mb-4">
+          <h2 className="text-xl font-bold">Забронированные ячейки</h2>
+          <span className="text-xs text-muted-foreground">{reserved.length} ожидают</span>
+        </div>
+
+        {reserved.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-dashed border-border p-8 text-center">
+            <Icon name="Clock" size={22} className="text-muted-foreground mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground mb-3">Нет забронированных ячеек</p>
+            <button
+              onClick={() => setPage("warehouses")}
+              className="text-sm text-primary font-medium hover:underline"
+            >
+              Забронировать ячейку →
+            </button>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {reserved.map((b) => (
+              <div key={b.id} className="bg-white rounded-2xl border border-border p-5">
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-bold text-lg">{b.cell.name}</span>
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                        Ожидает оплаты
+                      </span>
+                    </div>
+                    <p className="text-sm text-muted-foreground">{b.warehouse.name} · {b.warehouse.address}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-base">{b.price_month.toLocaleString("ru")} ₽</p>
+                    <p className="text-xs text-muted-foreground">в месяц</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button className="flex-1 bg-primary text-primary-foreground py-2.5 rounded-xl text-sm font-medium hover:opacity-90 transition-opacity">
+                    Оплатить и активировать
+                  </button>
+                  <button className="px-4 py-2.5 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors">
+                    Отменить
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* Logout */}
       <button
         onClick={onLogout}
-        className="w-full py-3.5 rounded-2xl border border-red-200 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors flex items-center justify-center gap-2"
+        className="w-full py-3.5 rounded-2xl border border-border text-muted-foreground text-sm font-medium hover:bg-secondary hover:text-foreground transition-colors flex items-center justify-center gap-2"
       >
-        <Icon name="LogOut" size={16} />
+        <Icon name="LogOut" size={15} />
         Выйти из аккаунта
       </button>
     </div>
