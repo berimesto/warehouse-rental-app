@@ -1170,99 +1170,151 @@ function ProfilePage({
   const [agreedPersonal, setAgreedPersonal] = useState(false);
   const canPay = agreedOffer && agreedPersonal;
 
-  const bookingDeadline = new Date(Date.now() + 2 * 3600 * 1000 + 13 * 60 * 1000);
-
   void rented;
   void reserved;
-  void bookingDeadline;
 
-  const Field = ({ label, value, accent }: { label: string; value: string; accent?: "amber" | "emerald" }) => (
-    <div className={`rounded-2xl p-4 border ${
+  const Field = ({ label, value, icon, accent }: { label: string; value: string; icon: string; accent?: "amber" | "emerald" }) => (
+    <div className={`group rounded-2xl p-4 border transition-all hover:shadow-sm ${
       accent === "amber"
-        ? "bg-amber-50/60 border-amber-200"
+        ? "bg-gradient-to-br from-amber-50 to-orange-50/60 border-amber-200"
         : accent === "emerald"
-        ? "bg-emerald-50/50 border-emerald-200/70"
-        : "bg-white border-border"
+        ? "bg-white/70 backdrop-blur border-emerald-200/70"
+        : "bg-secondary/40 border-border/60"
     }`}>
-      <p className={`text-[11px] uppercase tracking-[0.12em] mb-1 ${
-        accent === "amber" ? "text-amber-700" : accent === "emerald" ? "text-emerald-700/80" : "text-muted-foreground"
+      <div className={`flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] font-semibold mb-2 ${
+        accent === "amber" ? "text-amber-700" : accent === "emerald" ? "text-emerald-700/90" : "text-muted-foreground"
       }`}>
+        <Icon name={icon} size={11} fallback="Circle" />
         {label}
+      </div>
+      <p className={`text-[15px] font-bold leading-tight ${accent === "amber" ? "text-amber-800" : accent === "emerald" ? "text-emerald-950" : "text-foreground"}`}>
+        {value}
       </p>
-      <p className={`text-[15px] font-bold ${accent === "amber" ? "text-amber-700" : ""}`}>{value}</p>
     </div>
   );
 
   return (
-    <div className="px-4 md:px-6 pt-6 pb-16 max-w-5xl mx-auto animate-fade-in">
+    <div className="px-4 md:px-6 pt-8 pb-20 max-w-5xl mx-auto animate-fade-in">
       {/* H1 */}
-      <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-none mb-6">
-        Личный кабинет
-      </h1>
+      <div className="mb-7">
+        <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground font-semibold mb-2">My Account</p>
+        <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-[0.95]">
+          Личный <span className="text-primary">кабинет</span>
+        </h1>
+      </div>
 
       {/* 1. КОНТАКТНЫЕ ДАННЫЕ */}
-      <section className="bg-white rounded-3xl border border-border/80 p-6 md:p-8 mb-5">
-        <h2 className="text-2xl font-bold mb-5">Контактные данные</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-          <Field label="Email" value={user.email} />
-          <Field label="ФИО" value={user.full_name} />
-          <Field label="Телефон" value={user.phone} />
+      <section className="relative bg-white rounded-3xl border border-border/80 p-6 md:p-8 mb-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary to-indigo-600 flex items-center justify-center shadow-md shadow-primary/20">
+            <Icon name="UserCircle2" size={22} className="text-white" fallback="User" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold leading-tight">Контактные данные</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Используются для связи с вами</p>
+          </div>
         </div>
 
-        <div className="bg-indigo-50/70 border border-indigo-100 rounded-2xl px-5 py-3.5">
-          <p className="text-sm text-indigo-700 font-medium">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+          <Field label="Email" value={user.email} icon="Mail" />
+          <Field label="ФИО" value={user.full_name} icon="User" />
+          <Field label="Телефон" value={user.phone} icon="Phone" />
+        </div>
+
+        <div className="flex items-center gap-3 bg-indigo-50/70 border border-indigo-100 rounded-2xl px-5 py-3.5">
+          <div className="w-7 h-7 rounded-full bg-indigo-100 flex items-center justify-center shrink-0">
+            <Icon name="Check" size={14} className="text-indigo-700" />
+          </div>
+          <p className="text-sm text-indigo-800 font-medium">
             Контактные данные сохранены. Для изменений свяжитесь с нами.
           </p>
         </div>
       </section>
 
       {/* 2. ДОСТУП АКТИВЕН */}
-      <section className="bg-gradient-to-br from-emerald-50 to-green-50/80 border border-emerald-100 rounded-3xl p-6 md:p-8 mb-5">
-        <h2 className="text-2xl font-bold text-emerald-950 mb-1">Доступ активен</h2>
-        <p className="text-sm text-emerald-800/80">Вы можете перейти на страницу доступа.</p>
+      <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-50/70 border border-emerald-100 rounded-3xl p-6 md:p-8 mb-5">
+        <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -left-10 -bottom-10 w-40 h-40 bg-teal-300/20 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="relative flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="relative">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/40">
+                <Icon name="KeyRound" size={22} className="text-white" fallback="Key" />
+              </div>
+              <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-emerald-400 border-2 border-white animate-pulse" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-emerald-950 leading-tight">Доступ активен</h2>
+              <p className="text-sm text-emerald-800/80 mt-0.5">Вы можете перейти на страницу доступа</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setPage("access")}
+            className="hidden sm:inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-md shadow-emerald-500/30"
+          >
+            Открыть <Icon name="ArrowRight" size={14} />
+          </button>
+        </div>
       </section>
 
       {/* 3. БРОНЬ */}
-      <section className="bg-white rounded-3xl border border-border/80 p-6 md:p-8 mb-5">
+      <section className="relative bg-white rounded-3xl border border-border/80 p-6 md:p-8 mb-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
         {/* Yellow banner */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-5">
-          <p className="text-lg font-bold text-amber-950 mb-1">Ячейка забронирована</p>
-          <p className="text-sm text-amber-900/90 leading-relaxed">
-            Бронь действует ещё <span className="font-semibold">1 час</span> — до 12.05.2026, 19:13:45. Подтвердите условия и перейдите к оплате, чтобы завершить оформление брони.
-          </p>
+        <div className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-2xl p-5 mb-5">
+          <div className="absolute -right-8 -bottom-8 w-32 h-32 bg-amber-200/40 rounded-full blur-2xl" />
+          <div className="relative flex items-start gap-4">
+            <div className="w-11 h-11 rounded-2xl bg-amber-500 flex items-center justify-center shadow-md shadow-amber-500/30 shrink-0">
+              <Icon name="Bookmark" size={20} className="text-white" fallback="Star" />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                <p className="text-lg font-bold text-amber-950">Ячейка забронирована</p>
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider text-amber-900 bg-amber-200/70 px-2 py-0.5 rounded-full">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse" />
+                  К оплате
+                </span>
+              </div>
+              <p className="text-sm text-amber-900/90 leading-relaxed">
+                Бронь действует ещё <span className="font-bold">1 час</span> — до 12.05.2026, 19:13:45. Подтвердите условия и перейдите к оплате, чтобы завершить оформление брони.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Two fields row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-          <Field label="Ячейка" value="На планете · Ячейка №5 · 1 м³" />
-          <Field label="Бронь действует до" value="12.05.2026, 19:13:45" accent="amber" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5">
+          <Field label="Ячейка" value="На планете · Ячейка №5 · 1 м³" icon="Box" />
+          <Field label="Бронь действует до" value="12.05.2026, 19:13:45" icon="Clock" accent="amber" />
         </div>
 
         {/* Checkboxes block */}
-        <div className="border border-border rounded-2xl p-5 mb-5">
-          <p className="text-base font-bold mb-3">Перед оплатой подтвердите</p>
+        <div className="bg-secondary/30 border border-border/70 rounded-2xl p-5 mb-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Icon name="ShieldCheck" size={16} className="text-primary" />
+            <p className="text-sm font-bold uppercase tracking-wider">Перед оплатой подтвердите</p>
+          </div>
           <div className="space-y-3">
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group p-2 -m-2 rounded-xl hover:bg-white/60 transition-colors">
               <input
                 type="checkbox"
                 checked={agreedOffer}
                 onChange={(e) => setAgreedOffer(e.target.checked)}
-                className="w-4 h-4 rounded border-border accent-primary cursor-pointer shrink-0"
+                className="w-5 h-5 rounded-md border-border accent-primary cursor-pointer shrink-0"
               />
               <span className="text-sm">
-                Я принимаю условия <a className="text-primary underline underline-offset-2 font-medium">договора-оферты</a>
+                Я принимаю условия <a className="text-primary underline underline-offset-2 font-semibold">договора-оферты</a>
               </span>
             </label>
-            <label className="flex items-center gap-3 cursor-pointer">
+            <label className="flex items-center gap-3 cursor-pointer group p-2 -m-2 rounded-xl hover:bg-white/60 transition-colors">
               <input
                 type="checkbox"
                 checked={agreedPersonal}
                 onChange={(e) => setAgreedPersonal(e.target.checked)}
-                className="w-4 h-4 rounded border-border accent-primary cursor-pointer shrink-0"
+                className="w-5 h-5 rounded-md border-border accent-primary cursor-pointer shrink-0"
               />
               <span className="text-sm">
-                Я согласен на <a className="text-primary underline underline-offset-2 font-medium">обработку персональных данных</a>
+                Я согласен на <a className="text-primary underline underline-offset-2 font-semibold">обработку персональных данных</a>
               </span>
             </label>
           </div>
@@ -1272,48 +1324,62 @@ function ProfilePage({
         <div className="flex flex-wrap gap-3">
           <button
             disabled={!canPay}
-            className={`px-6 py-3 rounded-xl text-sm font-semibold transition-all ${
+            className={`group flex items-center gap-2 px-6 py-3.5 rounded-xl text-sm font-bold transition-all ${
               canPay
-                ? "bg-primary text-primary-foreground hover:opacity-90 shadow-sm"
-                : "bg-primary/30 text-white cursor-not-allowed"
+                ? "bg-gradient-to-br from-primary to-indigo-700 text-white hover:scale-[1.02] shadow-lg shadow-primary/30"
+                : "bg-primary/20 text-primary/60 cursor-not-allowed"
             }`}
           >
+            <Icon name="CreditCard" size={16} />
             Оплатить ячейку
+            {canPay && <Icon name="ArrowRight" size={14} className="group-hover:translate-x-0.5 transition-transform" />}
           </button>
-          <button className="px-6 py-3 rounded-xl border border-red-300 text-red-600 text-sm font-semibold hover:bg-red-50 transition-colors">
+          <button className="flex items-center gap-2 px-6 py-3.5 rounded-xl border-2 border-red-200 text-red-600 text-sm font-bold hover:bg-red-50 hover:border-red-300 transition-colors">
+            <Icon name="X" size={16} />
             Отменить бронь
           </button>
         </div>
       </section>
 
       {/* 4. АРЕНДА ДЕЙСТВУЕТ */}
-      <section className="mb-6">
-        <div className="bg-gradient-to-br from-emerald-50 to-green-50/80 border border-emerald-100 rounded-3xl p-6 md:p-8 mb-3">
-          <div className="flex items-start justify-between mb-4">
-            <h2 className="text-2xl font-bold text-emerald-950">Аренда действует</h2>
-            <span className="inline-flex items-center text-xs font-semibold text-emerald-700 bg-white border border-emerald-300 px-3 py-1 rounded-full">
+      <section className="mb-7">
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-50/70 border border-emerald-100 rounded-3xl p-6 md:p-8 mb-3">
+          <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -left-8 -bottom-8 w-40 h-40 bg-teal-300/20 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="relative flex items-start justify-between mb-5 flex-wrap gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-md shadow-emerald-500/30">
+                <Icon name="PackageCheck" size={20} className="text-white" fallback="Package" />
+              </div>
+              <h2 className="text-2xl font-bold text-emerald-950 leading-tight">Аренда действует</h2>
+            </div>
+            <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-emerald-700 bg-white/90 backdrop-blur border border-emerald-300 px-3 py-1.5 rounded-full shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               Активна
             </span>
           </div>
-          <button className="bg-primary hover:opacity-90 text-primary-foreground text-sm font-semibold px-5 py-2.5 rounded-xl transition-opacity">
+          <button className="relative inline-flex items-center gap-2 bg-gradient-to-br from-primary to-indigo-700 hover:scale-[1.02] text-primary-foreground text-sm font-bold px-6 py-3 rounded-xl transition-transform shadow-lg shadow-primary/30">
+            <Icon name="RefreshCw" size={14} />
             Продлить
           </button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          <Field label="Ячейка" value="На планете · Ячейка №11 · 1 м³" accent="emerald" />
-          <Field label="Оплата" value="Оплачено" accent="emerald" />
-          <Field label="Дата начала" value="2026-05-11" accent="emerald" />
-          <Field label="Дата окончания" value="2026-07-11" accent="emerald" />
-          <Field label="Доступ" value="Включен" accent="emerald" />
+          <Field label="Ячейка" value="На планете · Ячейка №11 · 1 м³" icon="Box" accent="emerald" />
+          <Field label="Оплата" value="Оплачено" icon="CheckCircle2" accent="emerald" />
+          <Field label="Дата начала" value="2026-05-11" icon="Calendar" accent="emerald" />
+          <Field label="Дата окончания" value="2026-07-11" icon="CalendarClock" accent="emerald" />
+          <Field label="Доступ" value="Включен" icon="Unlock" accent="emerald" />
         </div>
       </section>
 
       {/* Logout */}
       <button
         onClick={onLogout}
-        className="px-6 py-3 rounded-xl border border-border bg-white text-foreground text-sm font-semibold hover:bg-secondary transition-colors"
+        className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-border bg-white text-muted-foreground text-sm font-semibold hover:bg-secondary hover:text-foreground transition-colors"
       >
+        <Icon name="LogOut" size={15} />
         Выйти
       </button>
     </div>
