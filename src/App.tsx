@@ -255,8 +255,8 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
   return (
     <div className="animate-fade-in">
       {/* Hero */}
-      <section className="min-h-[80vh] flex flex-col justify-center px-4 pt-20 pb-10">
-        <div className="max-w-4xl mx-auto w-full text-center">
+      <section className="min-h-[80vh] flex flex-col justify-center px-6 pt-20 pb-10">
+        <div className="max-w-6xl mx-auto w-full text-center">
           <div className="inline-flex items-center gap-2 bg-accent text-accent-foreground px-4 py-1.5 rounded-full text-sm font-medium mb-6">
             <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             {totalFree} свободных ячеек прямо сейчас
@@ -291,7 +291,7 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
       </section>
 
       {/* Features */}
-      <section className="px-4 pb-16 max-w-5xl mx-auto">
+      <section className="px-6 pb-16 max-w-6xl mx-auto w-full">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {[
             { icon: "Shield", title: "Безопасность", desc: "Видеонаблюдение 24/7, охрана и электронные замки" },
@@ -310,7 +310,7 @@ function HomePage({ setPage }: { setPage: (p: Page) => void }) {
       </section>
 
       {/* Warehouses preview */}
-      <section className="px-4 pb-20 max-w-5xl mx-auto">
+      <section className="px-6 pb-20 max-w-6xl mx-auto w-full">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-2xl font-bold">Наши склады</h2>
           <button
@@ -395,7 +395,7 @@ function WarehousesPage({
   setSelectedWarehouse: (w: Warehouse) => void;
 }) {
   return (
-    <div className="px-4 pt-6 pb-24 max-w-5xl mx-auto animate-fade-in">
+    <div className="px-6 pt-6 pb-24 max-w-6xl mx-auto w-full animate-fade-in">
       <h1 className="text-2xl font-bold mb-1">Склады</h1>
       <p className="text-muted-foreground text-sm mb-6">Выберите склад и посмотрите доступные ячейки</p>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -532,7 +532,7 @@ function WarehousePage({
         </div>
       </div>
 
-      <div className="px-4 pb-24 max-w-3xl mx-auto">
+      <div className="px-6 pb-24 max-w-6xl mx-auto w-full">
         {/* Info */}
         <div className="bg-white rounded-xl border border-border p-4 mb-4">
           <p className="text-sm text-muted-foreground leading-relaxed">{warehouse.description}</p>
@@ -651,7 +651,7 @@ function MyCellsPage({
   };
 
   return (
-    <div className="px-4 pt-6 pb-24 max-w-2xl mx-auto animate-fade-in">
+    <div className="px-6 pt-6 pb-24 max-w-6xl mx-auto w-full animate-fade-in">
       <h1 className="text-2xl font-bold mb-1">Мои ячейки</h1>
       <p className="text-muted-foreground text-sm mb-6">Управляйте своими бронированиями</p>
 
@@ -781,7 +781,7 @@ function MyCellsPage({
 
 function ContactsPage() {
   return (
-    <div className="px-4 pt-6 pb-24 max-w-2xl mx-auto animate-fade-in">
+    <div className="px-6 pt-6 pb-24 max-w-6xl mx-auto w-full animate-fade-in">
       <h1 className="text-2xl font-bold mb-1">Контакты</h1>
       <p className="text-muted-foreground text-sm mb-6">Мы готовы ответить на ваши вопросы</p>
 
@@ -954,7 +954,7 @@ function AccessPage({ setPage }: { setPage: (p: Page) => void }) {
   };
 
   return (
-    <div className="px-4 pt-8 pb-28 max-w-3xl mx-auto animate-fade-in">
+    <div className="px-6 pt-8 pb-28 max-w-6xl mx-auto w-full animate-fade-in">
       {/* Header */}
       <div className="mb-8">
         <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">Access</p>
