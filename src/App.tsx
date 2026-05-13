@@ -1194,7 +1194,7 @@ function ProfilePage({
   );
 
   return (
-    <div className="px-4 md:px-6 pt-8 pb-20 max-w-5xl mx-auto animate-fade-in">
+    <div className="px-6 pt-8 pb-20 max-w-6xl mx-auto w-full animate-fade-in">
       {/* H1 */}
       <div className="mb-7">
         <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground font-semibold mb-2">My Account</p>
