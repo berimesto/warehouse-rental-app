@@ -1342,8 +1342,8 @@ function ProfilePage({
       </section>
 
       {/* 4. АРЕНДА ДЕЙСТВУЕТ */}
-      <section className="mb-7">
-        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-50/70 border border-emerald-100 rounded-3xl p-6 md:p-8 mb-3">
+      <section className="relative bg-white rounded-3xl border border-border/80 p-6 md:p-8 mb-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-emerald-50 to-teal-50/70 border border-emerald-100 rounded-2xl p-6 mb-5">
           <div className="absolute -right-16 -top-16 w-56 h-56 bg-emerald-300/30 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -left-8 -bottom-8 w-40 h-40 bg-teal-300/20 rounded-full blur-3xl pointer-events-none" />
 
